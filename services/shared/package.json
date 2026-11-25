@@ -1,0 +1,12 @@
+{
+  "name": "@mobile-store/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./schemas/validation.js": "./schemas/validation.js"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}
