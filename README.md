@@ -1,24 +1,24 @@
-# SWARUPANANDA ELECTRONICS
+# MobileStore frontend
 
-Responsive mobile storefront and service API for SWARUPANANDA ELECTRONICS. Local project targets MongoDB, with optional Cloudinary uploads, Razorpay payments, and Azure Blob Storage enhancement.
+Responsive React + TypeScript storefront scaffold in `services/mobile-store-web`.
 
-## Local setup
+## Local development
 
-1. Copy `.env.example` to `.env` and set `DATABASE_URL`. Configure `JWT_SECRET` to a unique long value for persistent local sessions. Keep provider credentials out of source control.
-2. Start local dependencies with `docker compose up -d mongodb azurite`.
-3. Install and run the API: `npm --prefix services/mobile-store-api install`, then `npm --prefix services/mobile-store-api run dev`. The API listens on `http://localhost:3001`.
-4. Install and build the frontend: `npm --prefix services/mobile-store-web install`, then `npm --prefix services/mobile-store-web run build`.
-5. Run checks with `npm test` and `npm run build`.
+```powershell
+npm --prefix services/mobile-store-web install
+npm --prefix services/mobile-store-web run dev
+```
 
-The Vite dev server is configured to bind on all interfaces and allow the VS Code preview iframe. The API base URL can be set with `VITE_API_BASE_URL`; an empty value uses same-origin `/api` requests.
+By default the UI uses the in-memory demo client. Set `VITE_API_BASE_URL` to the API origin ending in `/api` (for example `https://api.example.com/api`) to use the typed Axios client. For live Razorpay checkout, also set the public `VITE_RAZORPAY_KEY_ID`; payment signatures must be verified by the API. Vite reads these variables at build time.
 
-## GitHub Pages storefront
+## Build and static hosting
 
-Pushing to `main` builds and deploys the static frontend through GitHub Pages. On a new repository, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. The frontend uses its mock API client when `VITE_API_BASE_URL` is unset, so the published site is a demo storefront; GitHub Pages does not run the Node API or MongoDB. User accounts, service requests, and orders are not backed by a production database in this deployment.
+```powershell
+npm --prefix services/mobile-store-web run build
+```
 
-For persistent data and real API operations, deploy the API separately and set `VITE_API_BASE_URL` for the Pages build. Do not put database credentials, JWT secrets, or payment secrets in frontend variables.
+The static output is `services/mobile-store-web/dist`. Configure the static host to serve `index.html` as the fallback for unknown routes so `/cart`, `/account`, `/create-account`, `/services`, and `/admin` load through the SPA router. Set the API base URL in the static host's build environment before building. This scaffold does not deploy or provision hosting.
 
-## Render API target (not deployed)
+## Preview states
 
-- API: Node web service rooted at `services/mobile-store-api`, start command `npm start`, bind to `process.env.PORT`, configure `DATABASE_URL`, `JWT_SECRET`, `JWT_ISSUER`, `JWT_AUDIENCE`, and provider secrets as needed.
-- Frontend: static site rooted at `services/mobile-store-web`, build command `npm run build`, publish directory `dist`, set `VITE_API_BASE_URL` to the API service URL, and enable SPA fallback to `/index.html`.
+In development, the bottom-right Preview menu switches between data, loading, empty, and error states. The selected state is also available as `?previewState=data|loading|empty|error`.
